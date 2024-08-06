@@ -36,7 +36,7 @@ func TestGreetDefault(t *testing.T) {
 
 	handler.ServeHTTP(rr, req)
 
-	expected := "Hello, Saumya!"
+	expected := "Hello, Rahul!"
 	if !strings.Contains(rr.Body.String(), expected) {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
