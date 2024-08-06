@@ -1,0 +1,15 @@
+name: Golang CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    uses: ./.github/workflows/golangci-lint.yml
+    with:
+      go-version: 'stable'
