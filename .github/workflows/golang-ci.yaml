@@ -10,6 +10,6 @@ on:
 
 jobs:
   lint:
-    uses: ./.github/workflows/golangci-lint.yml
+    uses: ./.github/workflows/golangci-lint.yaml
     with:
       go-version: 'stable'
