@@ -35,7 +35,7 @@ var (
 func main() {
 	// Parse flags.
 	flag.Usage = usage
-	flag.Parse(
+	flag.Parse()
 
 	// Parse and validate arguments (none).
 	args := flag.Args()
