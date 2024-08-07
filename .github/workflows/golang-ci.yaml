@@ -14,11 +14,6 @@ permissions:
   statuses: write
 
 jobs:
-  print:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo ${{ secrets.TOKEN_FOR_GITHUB }}
-
   lint:
     uses: ./.github/workflows/golangci-lint.yaml
     with:
