@@ -7,6 +7,14 @@ on:
         description: 'The version of Go to use'
         required: true
         type: string
+      use-private-modules:
+        description: 'Flag to use private modules'
+        default: false
+        type: boolean
+      github-username:
+        description: 'The GitHub username for GOPRIVATE'
+        required: false
+        type: string
     secrets:
       GH_TOKEN:
         description: 'The GitHub token to use'
@@ -33,6 +41,7 @@ jobs:
           go-version: ${{ inputs.go-version }}
 
       - name: Configure Git for Private Modules
+        if: inputs.use-private-modules == true
         run: |
           git config --global url."https://${{ secrets.GH_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
           echo "GOPRIVATE=github.com/rohit-ng/*" >> $GITHUB_ENV
