@@ -39,5 +39,10 @@ jobs:
         env:
           GH_TOKEN: ${{ inputs.GH_TOKEN }}
 
-      - name: Lint with GolangCI-Lint
-        run: golangci-lint run
+      - name: Fetch Dependencies
+        run: go mod tidy
+
+      - name: Run GolangCI Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.59
