@@ -46,6 +46,9 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-go-
 
+      - name: Fetch Dependencies
+        run: go mod tidy
+
       - name: Run GolangCI Lint
         uses: golangci/golangci-lint-action@v6
         with:

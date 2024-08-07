@@ -36,5 +36,8 @@ jobs:
       #   env:
       #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
+      - name: Fetch Dependencies
+        run: go mod tidy
+
       - name: Test with Go
         run: go test 
