@@ -44,7 +44,7 @@ jobs:
         if: inputs.use-private-modules == true
         run: |
           git config --global url."https://${{ secrets.GH_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-          echo "GOPRIVATE=github.com/rohit-ng/*" >> $GITHUB_ENV
+          echo "GOPRIVATE=github.com/${{ inputs.github-username }}/*" >> $GITHUB_ENV
 
       - name: Fetch Dependencies
         run: go mod tidy

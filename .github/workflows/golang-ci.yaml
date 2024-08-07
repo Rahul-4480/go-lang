@@ -18,6 +18,8 @@ jobs:
     uses: ./.github/workflows/golangci-lint.yaml
     with:
       go-version: 'stable'
+      use-private-modules: true
+      github-username: 'rohit-ng'
     secrets:
       GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
 
@@ -25,5 +27,7 @@ jobs:
     uses: ./.github/workflows/golangci-test.yaml
     with:
       go-version: 'stable'
+      use-private-modules: true
+      github-username: 'rohit-ng'
     secrets:
       GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
