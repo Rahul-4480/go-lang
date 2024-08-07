@@ -1,0 +1,34 @@
+name: Golang CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: read
+  statuses: write
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ secrets.GH_TOKEN }}
+
+  lint:
+    uses: ./.github/workflows/golangci-lint.yaml
+    with:
+      go-version: 'stable'
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  test:
+    uses: ./.github/workflows/golangci-test.yaml
+    with:
+      go-version: 'stable'
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
