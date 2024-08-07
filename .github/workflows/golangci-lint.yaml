@@ -32,10 +32,19 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
 
+      - name: Extract Private Modules
+        id: extract-private-modules
+        run: |
+          private_modules=$(grep -E '^\s*require\s+github.com/rohit-ng/' go.mod | awk '{print $2}' | tr '\n' ',')
+          echo "private_modules=${private_modules%,}" >> $GITHUB_ENV
+
       - name: Configure Git for Private Modules
         run: |
-          git config --global url."https://${GH_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-          echo "GOPRIVATE=github.com/rohit-ng/mysecret" >> $GITHUB_ENV
+          IFS=',' read -ra ADDR <<< "${private_modules}"
+          for module in "${ADDR[@]}"; do
+            git config --global url."https://${GH_TOKEN}:x-oauth-basic@${module}".insteadOf "https://${module}"
+          done
+          echo "GOPRIVATE=${private_modules}" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ inputs.GH_TOKEN }}
 
