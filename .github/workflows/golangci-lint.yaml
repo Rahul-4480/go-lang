@@ -29,7 +29,26 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
 
+      # - name: Configure Git for Private Modules
+      #   run: |
+      #     git config --global url."https://${GH_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+      #     echo "GOPRIVATE=github.com/Rahul-4480/go-lang" >> $GITHUB_ENV
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      # - name: Cache Go Modules
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       ~/go/pkg/mod
+      #       ~/.cache/go-build
+      #     key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-go-
+
       - name: Run GolangCI Lint
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.59
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -28,6 +28,13 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go-version }}
-          
+
+      # - name: Configure Git for Private Modules
+      #   run: |
+      #     git config --global url."https://${GH_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+      #     echo "GOPRIVATE=github.com/Rahul-4480/go-lang" >> $GITHUB_ENV
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
       - name: Test with Go
         run: go test 
