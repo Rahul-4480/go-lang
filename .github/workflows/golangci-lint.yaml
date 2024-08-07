@@ -37,6 +37,7 @@ jobs:
         run: |
           private_modules=$(grep -E '^\s*require\s+github.com/rohit-ng/' go.mod | awk '{print $2}' | tr '\n' ',')
           echo "private_modules=${private_modules%,}" >> $GITHUB_ENV
+          echo "Private modules: ${private_modules}"
 
       - name: Configure Git for Private Modules
         run: |
