@@ -32,26 +32,6 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
 
-      - name: Extract Private Modules
-        id: extract-private-modules
-        run: |
-          # List all modules and filter for private ones
-          private_modules=$(go list -m all | grep -E 'github.com/rohit-ng/' | awk '{print $1}' | tr '\n' ',')
-          echo "private_modules=${private_modules%,}" >> $GITHUB_ENV
-          echo "Private modules: ${private_modules}"
-
-
-      - name: Configure Git for Private Modules
-        run: |
-          git config --global url."https://${GH_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-          echo "GOPRIVATE=${private_modules}" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ inputs.GH_TOKEN }}
-
-
-      - name: Fetch Dependencies
-        run: go mod tidy
-
       - name: Run GolangCI Lint
         uses: golangci/golangci-lint-action@v6
         with:
