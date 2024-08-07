@@ -17,18 +17,18 @@ jobs:
   print:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ secrets.GH_TOKEN }}
+      - run: echo ${{ secrets.TOKEN_FOR_GITHUB }}
 
   lint:
     uses: ./.github/workflows/golangci-lint.yaml
     with:
       go-version: 'stable'
     secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
 
   test:
     uses: ./.github/workflows/golangci-test.yaml
     with:
       go-version: 'stable'
     secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
