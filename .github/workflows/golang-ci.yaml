@@ -14,16 +14,18 @@ permissions:
   statuses: write
 
 jobs:
+  print:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ secrets.GH_TOKEN }}
   lint:
     uses: ./.github/workflows/golangci-lint.yaml
     with:
       go-version: 'stable'
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      gh-token: ${{ secrets.GH_TOKEN }}
 
   test:
     uses: ./.github/workflows/golangci-test.yaml
     with:
       go-version: 'stable'
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      gh-token: ${{ secrets.GH_TOKEN }}

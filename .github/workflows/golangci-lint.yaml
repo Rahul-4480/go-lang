@@ -1,4 +1,4 @@
-name: Golang Lint Check
+name: GolangCI Lint
 
 on:
   workflow_call:
@@ -13,8 +13,7 @@ on:
         type: string
 
 jobs:
-  golangci:
-    name: GolangCI Lint
+  lint:
     runs-on: ubuntu-latest
 
     permissions:
@@ -40,21 +39,5 @@ jobs:
         env:
           GH_TOKEN: ${{ inputs.gh-token }}
 
-      # - name: Cache Go Modules
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       ~/go/pkg/mod
-      #       ~/.cache/go-build
-      #     key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-go-
-
-      - name: Fetch Dependencies
-        run: go mod tidy
-
-      - name: Run GolangCI Lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.59
-          
+      - name: Lint with GolangCI-Lint
+        run: golangci-lint run
