@@ -38,13 +38,11 @@ jobs:
         run: |
           private_modules=$(grep -E '^\s*require\s+github.com/rohit-ng/' go.mod | awk '{print $2}' | tr '\n' ',')
           echo "private_modules=${private_modules%,}" >> $GITHUB_ENV
+          echo $private_modules
 
       - name: Configure Git for Private Modules
         run: |
-          IFS=',' read -ra ADDR <<< "${private_modules}"
-          for module in "${ADDR[@]}"; do
-            git config --global url."https://${GH_TOKEN}:x-oauth-basic@${module}".insteadOf "https://${module}"
-          done
+          git config --global url."https://${GH_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
           echo "GOPRIVATE=${private_modules}" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ inputs.GH_TOKEN }}
