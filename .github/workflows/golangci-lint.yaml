@@ -7,10 +7,10 @@ on:
         description: 'The version of Go to use'
         required: true
         type: string
-      gh-token:
+    secrets:
+      GH_TOKEN:
         description: 'The GitHub token to use'
         required: true
-        type: string
 
 jobs:
   lint:
@@ -32,12 +32,26 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
 
+      - name: Extract Private Modules
+        id: extract-private-modules
+        run: |
+          private_modules=$(grep -E '^\s*require\s+github.com/rohit-ng/' go.mod | awk '{print $2}' | tr '\n' ',')
+          echo "private_modules=${private_modules%,}" >> $GITHUB_ENV
+
       - name: Configure Git for Private Modules
         run: |
-          git config --global url."https://${GH_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-          echo "GOPRIVATE=github.com/Rahul-4480/go-lang" >> $GITHUB_ENV
+          IFS=',' read -ra ADDR <<< "${private_modules}"
+          for module in "${ADDR[@]}"; do
+            git config --global url."https://${GH_TOKEN}:x-oauth-basic@${module}".insteadOf "https://${module}"
+          done
+          echo "GOPRIVATE=${private_modules}" >> $GITHUB_ENV
         env:
-          GH_TOKEN: ${{ inputs.gh-token }}
+          GH_TOKEN: ${{ inputs.GH_TOKEN }}
 
-      - name: Lint with GolangCI-Lint
-        run: golangci-lint run
+      - name: Fetch Dependencies
+        run: go mod tidy
+
+      - name: Run GolangCI Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.59
