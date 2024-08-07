@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/rohit-ng/mysecret"
+	"github.com/rohit-ng/hello"
 )
 
 func usage() {
@@ -68,6 +69,7 @@ func version(w http.ResponseWriter, r *http.Request) {
 
 func greet(w http.ResponseWriter, r *http.Request) {
 	mysecret.SecretProcess()
+	hello.TestProcess()
 	name := strings.Trim(r.URL.Path, "/")
 	if name == "" {
 		name = "Saumya"
