@@ -1,4 +1,4 @@
-module golang.org/x/example/helloserver
+module github.com/Rahul-4480/go-lang
 
 go 1.19
 
