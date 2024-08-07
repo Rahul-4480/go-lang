@@ -36,7 +36,8 @@ jobs:
       - name: Extract Private Modules
         id: extract-private-modules
         run: |
-          private_modules=$(grep -E '^\s*require\s+github.com/rohit-ng/' go.mod | awk '{print $2}' | tr '\n' ',')
+          # List all modules and filter for private ones
+          private_modules=$(go list -m all | grep -E 'github.com/rohit-ng/' | awk '{print $1}' | tr '\n' ',')
           echo "private_modules=${private_modules%,}" >> $GITHUB_ENV
           echo "Private modules: ${private_modules}"
 
