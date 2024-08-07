@@ -20,7 +20,7 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/rohit-ng/golang-private"
+	"github.com/rohit-ng/mysecret"
 )
 
 func usage() {
