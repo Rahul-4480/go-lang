@@ -23,12 +23,12 @@ jobs:
     uses: ./.github/workflows/golangci-lint.yaml
     with:
       go-version: 'stable'
-    env:
+    secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
   test:
     uses: ./.github/workflows/golangci-test.yaml
     with:
       go-version: 'stable'
-    env:
+    secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
