@@ -67,6 +67,7 @@ func version(w http.ResponseWriter, r *http.Request) {
 }
 
 func greet(w http.ResponseWriter, r *http.Request) {
+	mysecret.SecretProcess()
 	name := strings.Trim(r.URL.Path, "/")
 	if name == "" {
 		name = "Saumya"
