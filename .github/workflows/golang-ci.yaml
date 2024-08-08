@@ -41,7 +41,7 @@ jobs:
       platforms: 'linux/arm64'
       prefix: 'sha'
       type: 'sha'
-      use-private-modules: true
+      use-private-module: true
       github-username: 'rohit-ng'
     secrets:
       assume-role: ${{ secrets.ASSUME_ROLE }}
