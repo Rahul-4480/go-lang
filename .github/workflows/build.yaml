@@ -46,6 +46,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      packages: read
+      statuses: write
+
     outputs:
       image-tag: ${{ steps.image-tag.outputs.image_tag }}
     steps:
