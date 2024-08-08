@@ -38,7 +38,6 @@ jobs:
     with:
       ecr-repository: 'golang'
       dockerfile: './Dockerfile'
-      platforms: 'linux/arm64'
       prefix: 'sha'
       type: 'sha'
       use-private-module: true
