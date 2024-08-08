@@ -31,3 +31,17 @@ jobs:
       github-username: 'rohit-ng'
     secrets:
       GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
+
+  build:
+    uses: ./.github/workflows/build.yaml
+    with:
+      ecr-repository: 'golang'
+      dockerfile: '../../Dockerfile'
+      platforms: 'linux/arm64'
+      prefix: 'sha'
+      type: 'sha'
+      use-private-modules: true
+      github-username: 'rohit-ng'
+    secrets:
+      assume-role: ${{ secrets.ASSUME_ROLE }}
+      GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}

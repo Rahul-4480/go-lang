@@ -32,7 +32,7 @@ func usage() {
 
 var (
 	greeting = flag.String("g", "Hello", "Greet with `greeting`")
-	addr     = flag.String("addr", "localhost:8000", "address to serve")
+	addr     = flag.String("addr", ":8000", "address to serve")
 )
 
 func main() {

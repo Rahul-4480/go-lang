@@ -1,0 +1,109 @@
+name: Go - Build and Push
+
+on:
+  workflow_call:
+    inputs:
+      ecr-repository:
+        required: true
+        type: string
+      aws-region:
+        default: ap-south-1
+        type: string
+      dockerfile:
+        default: Dockerfile
+        type: string
+      platforms:
+        default: linux/arm64
+        type: string
+      prefix:
+        default: sha
+        type: string
+      type:
+        default: sha
+        type: string
+      use-private-module:
+        default: false
+        type: boolean
+      github-username:
+        required: false
+        type: string
+
+    secrets:
+      assume-role:
+        required: true
+      GH_TOKEN:
+        description: 'The GitHub token to use'
+        required: true
+
+    outputs:
+      image-tag:
+        description: "Image tag output from build workflow"
+        value: ${{ jobs.build.outputs.image-tag }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      image-tag: ${{ steps.image-tag.outputs.image_tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.assume-role }}
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ inputs.ecr-repository }}
+        with:
+          images: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}
+          tags: |
+            type=${{ inputs.type }},prefix=${{ inputs.prefix }}-
+
+      - name: Build and push docker image to Amazon ECR
+        uses: docker/build-push-action@v5
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ inputs.ecr-repository }}
+          GITHUB_USERNAME: ${{ inputs.github-username }}
+        with:
+          context: .
+          push: true
+          file: ${{ inputs.dockerfile }}
+          platforms: ${{ inputs.platforms }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:buildcache
+          cache-to: type=registry,ref=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:buildcache,mode=max,image-manifest=true,oci-mediatypes=true
+          build-args: |
+            ${{
+              if (inputs.use-private-module == 'true') {
+                return `GH_TOKEN=$${{ secrets.GH_TOKEN }} GITHUB_USERNAME=${{ inputs.github-username }}`
+              } else {
+                return ''
+              }
+            }}
+
+      - name: Image Tag output
+        id: image-tag
+        run: |
+          IMAGE_TAG=$(echo ${{ steps.meta.outputs.tags }} | awk -F':' '{print $NF}')
+          echo "::notice title=Image tag::${IMAGE_TAG}"
+          echo "image_tag=${IMAGE_TAG}" >> $GITHUB_ENV
