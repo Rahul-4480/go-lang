@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.2
+# Use the official Golang image as the base image
 FROM golang:latest
 
 # Set the working directory inside the container
