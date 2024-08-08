@@ -37,7 +37,7 @@ jobs:
     uses: ./.github/workflows/build.yaml
     with:
       ecr-repository: 'golang'
-      dockerfile: '../../Dockerfile'
+      dockerfile: './Dockerfile'
       platforms: 'linux/arm64'
       prefix: 'sha'
       type: 'sha'
