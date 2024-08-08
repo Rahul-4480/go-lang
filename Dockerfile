@@ -1,13 +1,13 @@
-# Use the official Golang image as the base image
+# syntax=docker/dockerfile:1.2
 FROM golang:latest
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Set up environment variables for private modules
-ARG GH_TOKEN
 ARG GITHUB_USERNAME
-RUN git config --global url."https://${GH_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/" && \
+RUN --mount=type=secret,id=GH_TOKEN \
+    git config --global url."https://$(cat /run/secrets/GH_TOKEN):x-oauth-basic@github.com/".insteadOf "https://github.com/" && \
     echo "GOPRIVATE=github.com/${GITHUB_USERNAME}/*" >> /etc/environment
 
 # Copy the Go module files and download dependencies
