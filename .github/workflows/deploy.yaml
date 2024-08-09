@@ -56,7 +56,7 @@ jobs:
           echo "::notice title=Current Revision::${revision}"
           
           task_definition=$(aws ecs describe-task-definition --task-definition ${{ inputs.task-definition-family }} --output json)
-          container_name=$(echo $task_definition | jq -r '.containerDefinitions[0].name')
+          container_name=$(echo $task_definition | jq -r '.taskDefinition.containerDefinitions[0].name')
           
           echo "::notice title=First Container Name::${container_name}"
           echo "revision=$revision" >> $GITHUB_OUTPUT
