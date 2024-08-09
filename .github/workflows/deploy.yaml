@@ -44,7 +44,7 @@ jobs:
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ inputs.ecs-service }} --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ inputs.task-definition-family }} --query taskDefinition > task-definition.json
 
       - name: Get old task definition revision
         id: old-task-revision
