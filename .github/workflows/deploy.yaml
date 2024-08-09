@@ -103,4 +103,4 @@ jobs:
           fi
 
       - name: De-register previous revision
-        run: aws ecs deregister-task-definition --task-definition ${{ inputs.ecs-service }}:${{ steps.old-task-revision.outputs.revision }}
+        run: aws ecs deregister-task-definition --task-definition ${{ inputs.task-definition-family }}:${{ steps.old-task-revision.outputs.revision }}
