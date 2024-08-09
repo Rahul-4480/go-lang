@@ -12,9 +12,6 @@ on:
       task-definition-family:
         required: true
         type: string
-      container-name:
-        required: true
-        type: string
       aws-region:
         default: ap-south-1
         type: string
