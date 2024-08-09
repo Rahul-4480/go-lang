@@ -20,6 +20,7 @@ jobs:
     with:
       ecs-cluster: "default"
       ecs-service: "golang-test-service"
+      task-definition-family: "golang-test-family"
       image-tag: "sha-01029d6"
     secrets:
       assume-role: ${{ secrets.ASSUME_ROLE }}
