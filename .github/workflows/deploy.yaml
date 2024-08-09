@@ -12,6 +12,9 @@ on:
       task-definition-family:
         required: true
         type: string
+      container-name:
+        required: true
+        type: string
       aws-region:
         default: ap-south-1
         type: string
@@ -50,18 +53,24 @@ jobs:
         id: old-task-revision
         run: |
           revision=$(aws ecs describe-services \
-            --cluster ${{ inputs.ecs-cluster }} \
-            --services ${{ inputs.ecs-service }} \
-            --output json | jq -r '.services[] | select(.serviceName == "${{ inputs.ecs-service }}") | .taskDefinition | split(":")[-1]')
+          --cluster ${{ inputs.ecs-cluster }} \
+          --services ${{ inputs.ecs-service }} \
+          --output json | jq -r '.services[] | select(.serviceName == "${{ inputs.ecs-service }}") | .taskDefinition | split(":")[-1]')
           echo "::notice title=Current Revision::${revision}"
+          
+          task_definition=$(aws ecs describe-task-definition --task-definition $revision --output json)
+          container_name=$(echo $task_definition | jq -r '.containerDefinitions[0].name')
+          
+          echo "::notice title=First Container Name::${container_name}"
           echo "revision=$revision" >> $GITHUB_OUTPUT
+          echo "container_name=$container_name" >> $GITHUB_OUTPUT
 
       - name: Update image in task definition
         id: updated-task-definition
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: ${{ inputs.ecs-service }}
+          container-name: ${{ steps.old-task-revision.outputs.container_name }}
           image: ${{ inputs.image-tag }}
 
       - name: Deploy ECS task definition
