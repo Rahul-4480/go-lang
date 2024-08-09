@@ -15,34 +15,11 @@ permissions:
   statuses: write
 
 jobs:
-  lint:
-    uses: ./.github/workflows/golangci-lint.yaml
-    with:
-      go-version: 'stable'
-      use-private-modules: true
-      github-username: 'rohit-ng'
-    secrets:
-      GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
-
-  test:
-    uses: ./.github/workflows/golangci-test.yaml
-    with:
-      go-version: 'stable'
-      use-private-modules: true
-      github-username: 'rohit-ng'
-    secrets:
-      GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
-
   build:
-    uses: ./.github/workflows/build.yaml
+    uses: ./.github/workflows/deploy.yaml
     with:
-      ecr-repository: 'golang'
-      dockerfile: './Dockerfile'
-      platforms: linux/amd64,linux/arm64
-      prefix: 'sha'
-      type: 'sha'
-      use-private-module: true
-      github-username: 'rohit-ng'
+      ecs-cluster: "default"
+      ecs-service: "golang-test-service"
+      image-tag: "sha-01029d6"
     secrets:
       assume-role: ${{ secrets.ASSUME_ROLE }}
-      GH_TOKEN: ${{ secrets.TOKEN_FOR_GITHUB }}
