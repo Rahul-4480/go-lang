@@ -55,7 +55,7 @@ jobs:
           --output json | jq -r '.services[] | select(.serviceName == "${{ inputs.ecs-service }}") | .taskDefinition | split(":")[-1]')
           echo "::notice title=Current Revision::${revision}"
           
-          task_definition=$(aws ecs describe-task-definition --task-definition $revision --output json)
+          task_definition=$(aws ecs describe-task-definition --task-definition ${{ inputs.task-definition-family }} --output json)
           container_name=$(echo $task_definition | jq -r '.containerDefinitions[0].name')
           
           echo "::notice title=First Container Name::${container_name}"
